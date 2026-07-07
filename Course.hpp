@@ -21,7 +21,7 @@ public:
     size_t get_capacity() const;
 
     int count(int);
-    Course& insert(int a, size_t index);
+    Course& insert(int a, const size_t& index);
     void erase(size_t index);
 
     friend istream& operator>>(istream&, Course&);
@@ -40,20 +40,20 @@ public:
     Course& operator-=(const Course& vec);
     Course& operator-=(const int& a);
 
-    friend Course operator+(const int& a, const Course& vec);
-    friend Course operator-(const int& a, const Course& vec);
-    friend Course operator*(const int& a, const Course& vec);
-    friend Course operator/(const int& a, const Course& vec);
+    friend Course operator+(const int& a, const Course& vec) const;
+    friend Course operator-(const int& a, const Course& vec) const;
+    friend Course operator*(const int& a, const Course& vec) const;
+    friend Course operator/(const int& a, const Course& vec) const;
 
-    Course operator*(const int& a);
-    Course operator*(const Course& vec);
-    Course operator/(const int& a);
-    Course operator/(const Course& vec);
+    Course operator*(const int& a) const;
+    Course operator*(const Course& vec) const;
+    Course operator/(const int& a) const;
+    Course operator/(const Course& vec) const;
 
-    Course operator+(const int& a);
-    Course operator+(const Course& vec);
-    Course operator-(const int& a);
-    Course operator-(const Course& vec);
+    Course operator+(const int& a) const;
+    Course operator+(const Course& vec) const;
+    Course operator-(const int& a) const;
+    Course operator-(const Course& vec) const;
 
 };
 
@@ -175,13 +175,17 @@ Course& Course::operator-=(const Course& vec) {
     return *this;
 }
 
-Course operator*(const int& k, const Course& vec) {
-    return vec * k;
+Course operator*(const int& k, const Course& vec) const {
+    Course c = *this;
+    c *= vec;
+    return c;
 }
-Course operator+(const int& k, const Course& vec) {
-    return vec + k;
+Course operator+(const int& k, const Course& vec) const {
+    Course c = *this;
+    c += vec;
+    return c;
 }
-Course operator/(const int& k, const Course& vec) {
+Course operator/(const int& k, const Course& vec) const {
     Course new_vec;
     new_vec = vec;
     for (int i = 0; i < vec.size; ++i) {
@@ -189,7 +193,7 @@ Course operator/(const int& k, const Course& vec) {
     }
     return new_vec;
 }
-Course operator-(const int& k, const Course& vec) {
+Course operator-(const int& k, const Course& vec) const {
     Course new_vec;
     new_vec = vec;
     for (int i = 0; i < vec.size; ++i) {
@@ -198,49 +202,49 @@ Course operator-(const int& k, const Course& vec) {
     return new_vec;
 }
 
-Course Course::operator*(const Course& vec) {
+Course Course::operator*(const Course& vec) const {
     Course new_vec;
     new_vec = *this;
     new_vec *= vec;
     return new_vec;
 }
-Course Course::operator*(const int& a) {
+Course Course::operator*(const int& a) const {
     Course new_vec;
     new_vec = *this;
     new_vec *= a;
     return new_vec;
 }
-Course Course::operator+(const int& a) {
+Course Course::operator+(const int& a) const {
     Course new_vec;
     new_vec = *this;
     new_vec += a;
     return new_vec;
 }
-Course Course::operator+(const Course& vec) {
+Course Course::operator+(const Course& vec) const {
     Course new_vec;
     new_vec = *this;
     new_vec += vec;
     return new_vec;
 }
-Course Course::operator/(const int& a) {
+Course Course::operator/(const int& a) const {
     Course new_vec;
     new_vec = *this;
     new_vec /= a;
     return new_vec;
 }
-Course Course::operator/(const Course& vec) {
+Course Course::operator/(const Course& vec) const {
     Course new_vec;
     new_vec = *this;
     new_vec /= vec;
     return new_vec;
 }
-Course Course::operator-(const int& a) {
+Course Course::operator-(const int& a) const {
     Course new_vec;
     new_vec = *this;
     new_vec -= a;
     return new_vec;
 }
-Course Course::operator-(const Course& vec) {
+Course Course::operator-(const Course& vec) const{
     Course new_vec;
     new_vec = *this;
     new_vec -= vec;
