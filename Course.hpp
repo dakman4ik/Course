@@ -15,14 +15,14 @@ public:
     void rellocate();
 
     void pop_back();
-    void push_back(int);
+    void push_back(const int);
 
     size_t get_size() const;
     size_t get_capacity() const;
 
-    int count(int);
-    Course& insert(int a, const size_t& index);
-    void erase(size_t index);
+    int count(const int);
+    Course& insert(const int a, const size_t& index);
+    void erase(const size_t& index);
 
     friend istream& operator>>(istream&, Course&);
     friend ostream& operator<<(ostream&, const Course&);
@@ -40,10 +40,10 @@ public:
     Course& operator-=(const Course& vec);
     Course& operator-=(const int& a);
 
-    friend Course operator+(const int& a, const Course& vec) const;
-    friend Course operator-(const int& a, const Course& vec) const;
-    friend Course operator*(const int& a, const Course& vec) const;
-    friend Course operator/(const int& a, const Course& vec) const;
+    friend Course operator+(const int& a, const Course& vec);
+    friend Course operator-(const int& a, const Course& vec);
+    friend Course operator*(const int& a, const Course& vec);
+    friend Course operator/(const int& a, const Course& vec);
 
     Course operator*(const int& a) const;
     Course operator*(const Course& vec) const;
@@ -63,13 +63,13 @@ istream& operator>>(istream& input, Course& a) {
     a.capacity = n; a.size = n;
     delete[] a.data;
     a.data = new int[a.capacity];
-    for (int i = 0; i < a.size; ++i) {
+    for (size_t i = 0; i < a.size; ++i) {
         input >> a.data[i];
     }
     return input;
 }
 ostream& operator<<(ostream& output, const Course& a) {
-    for (int i = 0; i < a.size; ++i) {
+    for (size_t i = 0; i < a.size; ++i) {
         output << a.data[i] << " ";
     }
     return output;
@@ -86,7 +86,7 @@ Course::Course(const Course& p) {
     capacity = p.capacity;
     size = p.size;
     data = new int[capacity];
-    for (int i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; ++i)
         data[i] = p.data[i];
 }
 Course& Course::operator=(const Course& other) {
@@ -97,7 +97,7 @@ Course& Course::operator=(const Course& other) {
     capacity = other.capacity;
     size = other.size;
     data = new int[capacity];
-    for (int i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; ++i)
         data[i] = other.data[i];
     return *this;
 }
@@ -111,7 +111,7 @@ Course::~Course() {
 
 
 Course& Course::operator*=(const int& a) {
-    for (int i = 0; i < this->size; ++i) {
+    for (size_t i = 0; i < this->size; ++i) {
         this->data[i] *= a;
     }
     return *this;
@@ -119,15 +119,14 @@ Course& Course::operator*=(const int& a) {
 Course& Course::operator*=(const Course& vec) {
     if (this->size != vec.size) {
         throw out_of_range("[ERROR] Array sizes do not match");
-        return;
     }
-    for (int i = 0; i < vec.size; ++i) {
+    for (size_t i = 0; i < vec.size; ++i) {
         this->data[i] *= vec.data[i];
     }
     return *this;
 }
 Course& Course::operator/=(const int& a) {
-    for (int i = 0; i < this->size; ++i) {
+    for (size_t i = 0; i < this->size; ++i) {
         this->data[i] /= a;
     }
     return *this;
@@ -135,15 +134,14 @@ Course& Course::operator/=(const int& a) {
 Course& Course::operator/=(const Course& vec) {
     if (this->size != vec.size) {
         throw out_of_range("[ERROR] Array sizes do not match");
-        return;
     }
-    for (int i = 0; i < vec.size; ++i) {
+    for (size_t i = 0; i < vec.size; ++i) {
         this->data[i] /= vec.data[i];
     }
     return *this;
 }
 Course& Course::operator+=(const int& a) {
-    for (int i = 0; i < this->size; ++i) {
+    for (size_t i = 0; i < this->size; ++i) {
         this->data[i] += a;
     }
     return *this;
@@ -151,15 +149,14 @@ Course& Course::operator+=(const int& a) {
 Course& Course::operator+=(const Course& vec) {
     if (this->size != vec.size) {
         throw out_of_range("[ERROR] Array sizes do not match");
-        return;
     }
-    for (int i = 0; i < vec.size; ++i) {
+    for (size_t i = 0; i < vec.size; ++i) {
         this->data[i] += vec.data[i];
     }
     return *this;
 }
 Course& Course::operator-=(const int& a) {
-    for (int i = 0; i < this->size; ++i) {
+    for (size_t i = 0; i < this->size; ++i) {
         this->data[i] -= a;
     }
     return *this;
@@ -167,36 +164,35 @@ Course& Course::operator-=(const int& a) {
 Course& Course::operator-=(const Course& vec) {
     if (this->size != vec.size) {
         throw out_of_range("[ERROR] Array sizes do not match");
-        return;
     }
-    for (int i = 0; i < vec.size; ++i) {
+    for (size_t i = 0; i < vec.size; ++i) {
         this->data[i] -= vec.data[i];
     }
     return *this;
 }
 
-Course operator*(const int& k, const Course& vec) const {
-    Course c = *this;
-    c *= vec;
+Course operator*(const int& k, const Course& vec) {
+    Course c = vec;
+    c *= k;
     return c;
 }
-Course operator+(const int& k, const Course& vec) const {
-    Course c = *this;
-    c += vec;
+Course operator+(const int& k, const Course& vec) {
+    Course c = vec;
+    c += k;
     return c;
 }
-Course operator/(const int& k, const Course& vec) const {
+Course operator/(const int& k, const Course& vec) {
     Course new_vec;
     new_vec = vec;
-    for (int i = 0; i < vec.size; ++i) {
+    for (size_t i = 0; i < vec.size; ++i) {
         vec.data[i] = vec.data[i] / k;
     }
     return new_vec;
 }
-Course operator-(const int& k, const Course& vec) const {
+Course operator-(const int& k, const Course& vec) {
     Course new_vec;
     new_vec = vec;
-    for (int i = 0; i < vec.size; ++i) {
+    for (size_t i = 0; i < vec.size; ++i) {
         vec.data[i] = vec.data[i] - k;
     }
     return new_vec;
@@ -267,16 +263,16 @@ void Course::rellocate() {
 }
 
 void Course::pop_back() {
-    --size;
     if (size <= 0) size = 0;
+    --size;
     int* dat = new int[size];
-    for (int i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i) {
         dat[i] = data[i];
     }
     delete[] data;
     data = dat;
 }
-void Course::push_back(int a) {
+void Course::push_back(const int a) {
     if (size >= capacity) {
         rellocate();
     }
@@ -284,19 +280,18 @@ void Course::push_back(int a) {
     ++size;
 }
 
-int Course::count(int a) {
+int Course::count(const int a) {
     int cnt = 0;
-    for (int i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i) {
         if (data[i] == a) ++cnt;
     }
     if (cnt == 0) return -1;
     else return cnt;
 }
 
-Course& Course::insert(int a, size_t ind) {
+Course& Course::insert(const int a, const size_t& ind) {
     if (ind > size) {
         throw out_of_range("[ERROR] Index exceeds size");
-        return;
     }
     if (size >= capacity) rellocate();
 
@@ -307,10 +302,9 @@ Course& Course::insert(int a, size_t ind) {
     ++size;
     return *this;
 }
-void Course::erase(size_t ind) {
+void Course::erase(const size_t& ind) {
     if (ind > size) {
         throw out_of_range("[ERROR] Index exceeds size");
-        return;
     }
     for (size_t i = ind; i < size-1; ++i) {
         data[i] = data[i+1];
